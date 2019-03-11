@@ -8,5 +8,5 @@ usage:
 	
 example:
 	
-	./netspeed.sh -f k		      	   #average speed in kB/s on all interfaces
-	./netspeed.sh -b -f M -c 0 -I eth0 -i 2    #average speed in Mb/s every 2 seconds unti user-interrupt for eth0
+	./netspeed.sh -f k		      	   #speed in kB/s on all interfaces
+	./netspeed.sh -b -f M -c 0 -I eth0 -i 2    #speed in Mb/s every 2 seconds until user-interrupt for eth0
