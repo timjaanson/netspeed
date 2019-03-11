@@ -68,19 +68,11 @@ shift "$(($OPTIND -1))"
 
 getCurrentBytes () {
     N=0
-    for i in $(awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}") ; do
-   
+    for i in $(awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}")
+    do
       initBytes[$N]="$i"
-      #echo "$N = $i"     #to confirm the entry
-       
       let "N= $N + 1"
     done
-    #initBytes=( $(awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}") )
-    #initBytes=()
-    #while IFS= read -r line; do
-    #    initBytes+=( "$line" )
-    #done < <( awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}" )
-
 }
 
 printValue () {
@@ -122,7 +114,7 @@ printValue () {
     downloadSpeed=`echo ${downloadSpeed} ${2} ${4} | awk '{printf "%.2f \n", $1/$2/$3}'`
     uploadSpeed=$(( ($finalTX - $initTX) * ${1}))
     uploadSpeed=`echo ${uploadSpeed} ${2} ${4} | awk '{printf "%.2f \n", $1/$2/$3}'`
-    echo "${downloadSpeed}	${uploadSpeed}"
+    echo "${downloadSpeed}   ${uploadSpeed}"
 }
 
 if [[ $formatValue == "k" || $formatValue == "K" ]]
