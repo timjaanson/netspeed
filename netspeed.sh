@@ -67,10 +67,19 @@ done
 shift "$(($OPTIND -1))"
 
 getCurrentBytes () {
-    initBytes=()
-    while IFS= read -r line; do
-        initBytes+=( "$line" )
-    done < <( awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}" )
+    N=0
+    for i in $(awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}") ; do
+   
+      initBytes[$N]="$i"
+      #echo "$N = $i"     #to confirm the entry
+       
+      let "N= $N + 1"
+    done
+    #initBytes=( $(awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}") )
+    #initBytes=()
+    #while IFS= read -r line; do
+    #    initBytes+=( "$line" )
+    #done < <( awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}" )
 
 }
 
@@ -78,11 +87,17 @@ printValue () {
     getCurrentBytes $3
     initRX=0
     initTX=0
+    N=0
     for i in "${initBytes[@]}"
     do
-        deviceBytes=($i)
-	initRX=$((${initRX} + ${deviceBytes[1]}))
-	initTX=$((${initTX} + ${deviceBytes[2]}))
+        if [[ $(( N % 3 )) == 1 ]]
+        then
+	          initRX=$((${initRX} + ${i}))
+        elif [[ $(( N % 3 )) == 2 ]]
+        then
+	          initTX=$((${initTX} + ${i}))
+        fi
+        let "N= $N + 1"
     done
 
     sleep ${4}
@@ -90,12 +105,19 @@ printValue () {
     finalRX=0
     finalTX=0
     getCurrentBytes $3
+    N=0
     for i in "${initBytes[@]}"
     do
-        deviceBytes=($i)
-        finalRX=$((${finalRX} + ${deviceBytes[1]}))
-        finalTX=$((${finalTX} + ${deviceBytes[2]}))
+        if [[ $(( N % 3 )) == 1 ]]
+        then
+	          finalRX=$((${finalRX} + ${i}))
+        elif [[ $(( N % 3 )) == 2 ]]
+        then
+	          finalTX=$((${finalTX} + ${i}))
+        fi
+        let "N= $N + 1"
     done
+
     downloadSpeed=$(( ($finalRX - $initRX) * ${1}))
     downloadSpeed=`echo ${downloadSpeed} ${2} ${4} | awk '{printf "%.2f \n", $1/$2/$3}'`
     uploadSpeed=$(( ($finalTX - $initTX) * ${1}))
