@@ -1,5 +1,5 @@
 # Netspeed
-Bash script for measuring current transfer rate
+Bash script for measuring current bandwidth usage without root access
 
 usage: 
 	
