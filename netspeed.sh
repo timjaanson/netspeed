@@ -96,11 +96,11 @@ printValue () {
         finalRX=$((${finalRX} + ${deviceBytes[1]}))
         finalTX=$((${finalTX} + ${deviceBytes[2]}))
     done
-
-    downloadSpeed=$(bc <<< "scale=2;($finalRX - $initRX) * ${1} / ${2} / ${4}" | sed 's/^\./0./')
-    uploadSpeed=$(bc <<< "scale=2;($finalTX - $initTX) * ${1} / ${2} / ${4}" | sed 's/^\./0./')
+    downloadSpeed=$(( ($finalRX - $initRX) * ${1}))
+    downloadSpeed=`echo ${downloadSpeed} ${2} ${4} | awk '{printf "%.2f \n", $1/$2/$3}'`
+    uploadSpeed=$(( ($finalTX - $initTX) * ${1}))
+    uploadSpeed=`echo ${uploadSpeed} ${2} ${4} | awk '{printf "%.2f \n", $1/$2/$3}'`
     echo "${downloadSpeed}	${uploadSpeed}"
-    #echo "${downloadSpeed}${formatValue}${unitMarking}/s ${uploadSpeed}${formatValue}${unitMarking}/s"
 }
 
 if [[ $formatValue == "k" || $formatValue == "K" ]]
