@@ -1,13 +1,11 @@
-# netspeed
-Bash script for monitoring bandwidth usage.
-
+# Netspeed
+Bash script for measuring current transfer rate
 
 usage: 
 	
 	netspeed.sh [-b bits] [-c count] [-f <k, M, G> prefix ]
- 		   [-i <seconds> interval] [-I <interface name> interface]
+ 		    [-i <seconds> interval] [-I <interface name> interface]
 	
-
 example:
 	
 	./netspeed.sh -f k		      	   #average speed in kB/s on all interfaces
