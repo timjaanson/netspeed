@@ -69,7 +69,6 @@ done
 shift "$(($OPTIND -1))"
 
 fullCalcDelay=$((interval * 1000 + calcDelay))
-echo $interval
 getCurrentBytes () {
     N=0
     for i in $(awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}")
