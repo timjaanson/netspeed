@@ -3,6 +3,7 @@ set -e
 set -u
 set -o pipefail
 
+calcDelay=85 #in ms
 unit=1
 unitMarking="B"
 interface=":"
@@ -44,6 +45,7 @@ while getopts 'bBf:I:i:c:h' OPTION; do
 
     i)
       interval="$OPTARG"
+      
       ;;
 
     c)
@@ -66,6 +68,8 @@ while getopts 'bBf:I:i:c:h' OPTION; do
 done
 shift "$(($OPTIND -1))"
 
+fullCalcDelay=$((interval * 1000 + calcDelay))
+echo $interval
 getCurrentBytes () {
     N=0
     for i in $(awk '/:/ { print($1, $2, $10) }' < /proc/net/dev | grep "${1}")
@@ -111,9 +115,9 @@ printValue () {
     done
 
     downloadSpeed=$(( ($finalRX - $initRX) * ${1}))
-    downloadSpeed=`echo ${downloadSpeed} ${2} ${4} | awk '{printf "%.2f \n", $1/$2/$3}'`
+    downloadSpeed=`echo ${downloadSpeed} ${2} ${4} 1000 ${5} | awk '{printf "%.2f \n", $1/$2/$5*($3*$4)}'`
     uploadSpeed=$(( ($finalTX - $initTX) * ${1}))
-    uploadSpeed=`echo ${uploadSpeed} ${2} ${4} | awk '{printf "%.2f \n", $1/$2/$3}'`
+    uploadSpeed=`echo ${uploadSpeed} ${2} ${4} 1000 ${5} | awk '{printf "%.2f \n", $1/$2/$5*($3*$4)}'`
     echo "${downloadSpeed}   ${uploadSpeed}"
 }
 
@@ -139,7 +143,7 @@ echo	"download upload [${formatValue}${unitMarking}/s]"
 h=0
 while (( h < count || infinite == 1 ))
 do
-    printValue $unit $format $interface $interval
+    printValue $unit $format $interface $interval $fullCalcDelay
     ((h+=1))
 done
 
