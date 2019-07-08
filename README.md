@@ -1,6 +1,7 @@
 # Netspeed
 Bash script for measuring current bandwidth usage without root access
 
+
 usage: 
 	
 	netspeed.sh [-b bits] [-c count] [-f <k, M, G> prefix ]
